@@ -28,15 +28,17 @@ class Generalist(nn.Module):
         self.hidden_size = hidden_size
         self.num_layers = num_layers
 
-        self._hidden = torch.zeros(num_layers, 1, hidden_size) # (1, batch_size, hidden_size)
+        self.hidden = self.init_hidden()
         self._cellstate = torch.zeros(num_layers, 1, hidden_size)
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, dropout=(0 if num_layers==1 else 0.05))
         self.hidden_to_output = nn.Linear(hidden_size, self.output_size)
-
+    
+    def init_hidden(self):
+        return  (torch.zeros(self.num_layers, 1, self.hidden_size),
+                 torch.zeros(self.num_layers, 1, self.hidden_size))
 
     def forward(self, inputs):
         # Since this is the generalist, do not pass any category info to the module
-        output, (self._hidden, self._cellstate) = self.lstm(inputs, (self._hidden, self._cellstate))
+        output, self.hidden = self.lstm(inputs, self.hidden)
         output = self.hidden_to_output(output)
-        print(output)
-        return output, self._hidden
+        return output
