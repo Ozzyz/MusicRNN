@@ -18,9 +18,6 @@ pypianoroll==0.5.0
 python-dateutil==2.7.3
 scikit-learn==0.20.0
 scipy==1.1.0
-tensorboard==1.11.0
-tensorboardX==1.4
-tensorflow==1.11.0
 torch==0.4.1
 torchvision==0.2.1
 librosa
